@@ -100,6 +100,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "pbox-gfx"
+version = "0.1.0"
+
+[[package]]
+name = "pbox-hle"
+version = "0.1.0"
+
+[[package]]
+name = "pbox-launcher"
+version = "0.1.0"
+
+[[package]]
 name = "pbox-loader"
 version = "0.1.0"
 dependencies = [
@@ -119,6 +131,14 @@ dependencies = [
 
 [[package]]
 name = "pbox-pe"
+version = "0.1.0"
+
+[[package]]
+name = "pbox-plugin"
+version = "0.1.0"
+
+[[package]]
+name = "pbox-sandbox"
 version = "0.1.0"
 
 [[package]]

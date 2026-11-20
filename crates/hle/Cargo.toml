@@ -1,0 +1,12 @@
+[package]
+name = "pbox-hle"
+description = "System functions a game imports, and the thread environment it runs in."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true

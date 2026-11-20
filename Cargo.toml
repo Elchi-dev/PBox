@@ -1,6 +1,17 @@
 [workspace]
 resolver = "2"
-members = ["crates/pe", "crates/loader", "crates/patch", "crates/cli"]
+members = [
+    "crates/pe",
+    "crates/loader",
+    "crates/patch",
+    "crates/hle",
+    "crates/sandbox",
+    "crates/gfx",
+    "crates/plugin",
+    "crates/launcher",
+    "crates/cli",
+]
+exclude = ["test-programs"]
 
 [workspace.package]
 version = "0.1.0"
@@ -14,6 +25,10 @@ authors = ["Elchi <github@elchi.dev>"]
 pbox-pe = { path = "crates/pe" }
 pbox-loader = { path = "crates/loader" }
 pbox-patch = { path = "crates/patch" }
+pbox-hle = { path = "crates/hle" }
+pbox-sandbox = { path = "crates/sandbox" }
+pbox-gfx = { path = "crates/gfx" }
+pbox-plugin = { path = "crates/plugin" }
 
 [workspace.lints.rust]
 unsafe_op_in_unsafe_fn = "deny"
