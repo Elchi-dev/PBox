@@ -1,0 +1,26 @@
+[workspace]
+resolver = "2"
+members = ["crates/pe"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "GPL-3.0-only"
+repository = "https://github.com/Elchi-dev/PBox"
+authors = ["Elchi <github@elchi.dev>"]
+
+[workspace.dependencies]
+pbox-pe = { path = "crates/pe" }
+pbox-loader = { path = "crates/loader" }
+pbox-patch = { path = "crates/patch" }
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+undocumented_unsafe_blocks = "warn"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

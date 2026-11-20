@@ -1,0 +1,12 @@
+[package]
+name = "pbox-pe"
+description = "Reads PE32+ images: headers, sections, imports and base relocations."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true

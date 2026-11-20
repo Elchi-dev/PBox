@@ -1,0 +1,8 @@
+/target
+*.pdb
+*.dmp
+
+# Game files never belong in this repository.
+/games
+*.xvc
+*.msixvc
