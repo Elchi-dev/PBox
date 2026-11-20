@@ -1,0 +1,80 @@
+// Draft of the plugin interface. Not stable yet: it becomes interface 1 with
+// PBox 0.5. Until then anything here may change.
+
+package pbox:plugin@0.1.0;
+
+interface types {
+    /// What a plugin may do. The user sees this list before enabling it.
+    enum capability {
+        launcher-page,
+        metadata,
+        input-mapping,
+        theme,
+        network,
+    }
+
+    record manifest {
+        id: string,
+        name: string,
+        version: string,
+        capabilities: list<capability>,
+    }
+
+    /// A game in the user's library, as plugins see it.
+    record game {
+        id: string,
+        title: string,
+        /// SHA-256 of the main executable, lower-case hex.
+        executable-sha256: string,
+    }
+}
+
+interface metadata {
+    use types.{game};
+
+    record details {
+        title: option<string>,
+        description: option<string>,
+        /// PNG or JPEG bytes.
+        cover: option<list<u8>>,
+    }
+
+    describe: func(g: game) -> option<details>;
+}
+
+interface input {
+    enum button { a, b, x, y, lb, rb, lt, rt, view, menu, ls, rs, up, down, left, right }
+
+    record binding {
+        button: button,
+        /// A host key or button name, such as "key:space" or "pad:south".
+        source: string,
+    }
+
+    default-bindings: func(game-id: string) -> list<binding>;
+}
+
+interface theme {
+    record colours {
+        background: u32,
+        surface: u32,
+        text: u32,
+        accent: u32,
+    }
+
+    get-colours: func() -> colours;
+}
+
+/// The host side: what PBox offers every plugin.
+interface host {
+    log: func(message: string);
+}
+
+world plugin {
+    use types.{manifest};
+    import host;
+    export describe-plugin: func() -> manifest;
+    export metadata;
+    export input;
+    export theme;
+}
