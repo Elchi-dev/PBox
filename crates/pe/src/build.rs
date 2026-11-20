@@ -107,6 +107,11 @@ impl Builder {
         slots
     }
 
+    /// The RVA the next section will get, for code that refers to itself.
+    pub fn next_rva(&self) -> u32 {
+        self.next_rva
+    }
+
     /// Adds a section and returns its RVA.
     pub fn section(&mut self, name: &str, characteristics: u32, data: &[u8]) -> u32 {
         self.section_sized(name, characteristics, data, data.len() as u32)
