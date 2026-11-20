@@ -1,7 +1,7 @@
 //! Loads small hand-assembled images and runs their code natively.
 #![cfg(target_arch = "x86_64")]
 
-use pbox_loader::{load, Exports, OnMissing, Options};
+use pbox_loader::{load, load_with, Exports, OnMissing, Options};
 use pbox_pe::build::Builder;
 use pbox_pe::scn;
 
@@ -120,4 +120,28 @@ fn code_pages_are_not_writable_and_data_pages_not_executable() {
             .unwrap();
         assert!(line.contains(" r-xp "), "text mapped as {line}");
     }
+}
+
+#[test]
+fn a_patch_changes_code_before_it_is_made_executable() {
+    let image = calls_host("host.dll", "add_one");
+    let mut exports = Exports::new();
+    exports.add("host.dll", "add_one", add_one as *const () as usize);
+    let img = pbox_pe::Image::parse(&image).unwrap();
+    let text = img
+        .sections
+        .iter()
+        .find(|s| s.name == ".text")
+        .unwrap()
+        .virtual_address;
+    // the argument of `mov ecx, 41` sits at offset 5
+    let loaded = load_with(&image, &exports, Options::default(), |m| {
+        let at = text as usize + 5;
+        assert_eq!(m[at], 41);
+        m[at] = 99;
+        Ok(())
+    })
+    .unwrap();
+    // SAFETY: the patched code still only calls add_one.
+    assert_eq!(unsafe { loaded.call_entry() }, 100);
 }

@@ -98,6 +98,8 @@ pub enum Error {
         what: &'static str,
         rva: u32,
     },
+    /// A patch refused to apply.
+    Patch(String),
 }
 
 impl fmt::Display for Error {
@@ -113,6 +115,7 @@ impl fmt::Display for Error {
                 write!(f, "relocation type {kind} at RVA {rva:#x} is not used on x86-64")
             }
             Error::OutOfImage { what, rva } => write!(f, "{what} at RVA {rva:#x} is outside the image"),
+            Error::Patch(e) => write!(f, "patching the image: {e}"),
         }
     }
 }
@@ -186,6 +189,17 @@ impl Loaded {
 
 /// Loads `data` with the given host functions.
 pub fn load(data: &[u8], exports: &Exports, options: Options) -> Result<Loaded, Error> {
+    load_with(data, exports, options, |_| Ok(()))
+}
+
+/// Like [`load`], and calls `patch` with the mapped image (index = RVA) after
+/// relocation and binding, before any page is made read-only or executable.
+pub fn load_with(
+    data: &[u8],
+    exports: &Exports,
+    options: Options,
+    patch: impl FnOnce(&mut [u8]) -> Result<(), String>,
+) -> Result<Loaded, Error> {
     let img = Image::parse(data)?;
     let page = mem::page_size();
     let preferred = (!options.force_relocation).then_some(img.image_base as usize);
@@ -267,6 +281,7 @@ pub fn load(data: &[u8], exports: &Exports, options: Options) -> Result<Loaded, 
             })?;
             slot.copy_from_slice(&(addr as u64).to_le_bytes());
         }
+        patch(bytes).map_err(Error::Patch)?;
     }
 
     mem::protect(
