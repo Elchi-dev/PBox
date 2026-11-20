@@ -1,0 +1,21 @@
+[package]
+name = "pbox-cli"
+description = "The pbox command: inspect, load and patch images, and check the native call path."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "pbox"
+path = "src/main.rs"
+
+[dependencies]
+pbox-pe.workspace = true
+pbox-loader.workspace = true
+pbox-patch.workspace = true
+
+[lints]
+workspace = true

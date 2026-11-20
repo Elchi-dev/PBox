@@ -1,0 +1,26 @@
+# Patches for the program `pbox selftest --write selftest.exe` writes.
+# Try:
+#   pbox patch check examples/selftest.toml selftest.exe
+#   pbox load selftest.exe --patches examples/selftest.toml
+
+[game]
+title = "PBox selftest"
+
+[[patch]]
+name = "answer 100"
+description = "Passes 99 instead of 41 to add_one."
+enabled = true
+
+[[patch.write]]
+rva = 0x2005
+expect = "29"
+bytes = "63"
+
+[[patch]]
+name = "made for another build"
+description = "Expects bytes that are not there, to show a refused patch."
+
+[[patch.write]]
+rva = 0x2005
+expect = "2a"
+bytes = "63"
